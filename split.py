@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-
 '''Program reads conll2000.tag (or another file with tags). Input is read and randomized according to seed
 given by user. Input is split into 80% training data set, 10% development set, and 10% test set,
-and written to file paths specified by user.'''
+and each set is written to a file specified by user.'''
 
 
 import random
@@ -31,7 +30,7 @@ def write_tags(data, tag) -> Iterator[List[List[str]]]:
             for sent in line:
                 word = " ".join(sent)
                 # add new line to end of string when writing to file
-                fhand.write(f"(word)\n")
+                fhand.write(f"{word}\n")
 
 def main(args: argparse.Namespace) -> None:
     corpus = list(read_tags(args.input))
@@ -44,7 +43,7 @@ def main(args: argparse.Namespace) -> None:
     random.shuffle(corpus)
     #split with indexing
     train = corpus[0:train_len]
-    dev = corpus[train_len: train_len+dev_len]
+    development = corpus[train_len: train_len+dev_len]
     test = corpus[train_len+dev_len:]
     write_tags(train, args.train)
     write_tags(development, args.dev)
@@ -59,4 +58,3 @@ if __name__ == "__main__":
     parser.add_argument('test', type=str, help='Path for writing test set')
 
     main(parser.parse_args())
-
