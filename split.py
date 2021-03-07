@@ -30,8 +30,8 @@ def write_tags(data, tag) -> Iterator[List[List[str]]]:
         for line in data:
             for sent in line:
                 word = " ".join(sent)
-                # write word to file
-                fhand.write(f"{word}\n")
+                # add new line to end of string when writing to file
+                fhand.write(f"(word)\n")
 
 def main(args: argparse.Namespace) -> None:
     corpus = list(read_tags(args.input))
