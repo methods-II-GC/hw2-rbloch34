@@ -12,7 +12,7 @@ import argparse
 from typing import Iterator, List
 
 def read_tags(path: str) -> Iterator[List[List[str]]]:
-    with open(path, "r") as source:
+    with open(path, 'r') as source:
         lines = []
         for line in source:
             line = line.rstrip()
@@ -26,18 +26,26 @@ def read_tags(path: str) -> Iterator[List[List[str]]]:
         yield lines
 
 def write_tags(data, tag) -> Iterator[List[List[str]]]:
-    with open(tag, 'r') as fhand:
+    with open(tag, 'w') as fhand:
         for line in data:
             for sent in line:
-                fhand.write(sent)
+                word = " ".join(sent)
+                # write word to file
+                fhand.write(f"{word}\n")
 
 def main(args: argparse.Namespace) -> None:
     corpus = list(read_tags(args.input))
     random.seed(args.seed)
+    #specify split
+    train_len = int((len(corpus)*0.8))
+    dev_len = int((len(corpus)*0.1))
+    test_len = int((len(corpus)*0.1))
+    #shuffle
     random.shuffle(corpus)
-    train = (len(corpus)*0.8)
-    development = (len(corpus)*0.1)
-    test = (len(corpus)*0.1)
+    #split with indexing
+    train = corpus[0:train_len]
+    dev = corpus[train_len: train_len+dev_len]
+    test = corpus[train_len+dev_len:]
     write_tags(train, args.train)
     write_tags(development, args.dev)
     write_tags(test, args.test)
@@ -51,3 +59,4 @@ if __name__ == "__main__":
     parser.add_argument('test', type=str, help='Path for writing test set')
 
     main(parser.parse_args())
+
