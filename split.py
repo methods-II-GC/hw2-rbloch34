@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 '''Program reads conll2000.tag (or another file with tags). Input is read and randomized according to seed
 given by user. Input is split into 80% training data set, 10% development set, and 10% test set,
 and written to file paths specified by user.'''
@@ -24,7 +25,7 @@ def read_tags(path: str) -> Iterator[List[List[str]]]:
     if lines:
         yield lines
 
-def write_tags(text, path, size):
+def write_tags(text, path, start, size):
     with open(path, 'r') as file:
         for line in text[start:start + size]:
             file.write(line)
@@ -36,9 +37,9 @@ def main(args: argparse.Namespace) -> None:
     train = (len(corpus)*0.8)
     development = (len(corpus)*0.1)
     test = (len(corpus)*0.1)
-    write_tags(corpus, args.train, train)
-    write_tags(corpus, args.dev, development)
-    write_tags(corpus, args.test, test)
+    write_tags(corpus, args.train, 0, train)
+    write_tags(corpus, args.dev, train, development)
+    write_tags(corpus, args.test, train+development, test)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='build a Python command-line tool which takes four arguments: input, train, dev, and test')
