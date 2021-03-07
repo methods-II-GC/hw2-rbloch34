@@ -25,10 +25,11 @@ def read_tags(path: str) -> Iterator[List[List[str]]]:
     if lines:
         yield lines
 
-def write_tags(text, path, start, size):
-    with open(path, 'r') as file:
-        for line in text[start:start + size]:
-            file.write(line)
+def write_tags(data, tag) -> Iterator[List[List[str]]]:
+    with open(tag, 'r') as fhand:
+        for line in data:
+            for sent in line:
+                fhand.write(sent)
 
 def main(args: argparse.Namespace) -> None:
     corpus = list(read_tags(args.input))
@@ -37,17 +38,16 @@ def main(args: argparse.Namespace) -> None:
     train = (len(corpus)*0.8)
     development = (len(corpus)*0.1)
     test = (len(corpus)*0.1)
-    write_tags(corpus, args.train, 0, train)
-    write_tags(corpus, args.dev, train, development)
-    write_tags(corpus, args.test, train+development, test)
+    write_tags(train, args.train)
+    write_tags(development, args.dev)
+    write_tags(test, args.test)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='build a Python command-line tool which takes four arguments: input, train, dev, and test')
-    parser.add_argument('--seed', type=int, help='Seed for random shuffling')
+    parser.add_argument('--seed', type=int, required=True, help='Seed for random shuffling')
     parser.add_argument('input', type=str, help='Read input data')
     parser.add_argument('train', type=str, help='Path for writing training set')
     parser.add_argument('dev', type=str, help='Path for writing dev set')
     parser.add_argument('test', type=str, help='Path for writing test set')
 
-    namespace = parser.parse_args()
-    main(namespace)
+    main(parser.parse_args())
