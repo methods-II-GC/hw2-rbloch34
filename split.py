@@ -4,7 +4,6 @@
 given by user. Input is split into 80% training data set, 10% development set, and 10% test set,
 and each set is written to a file specified by user.'''
 
-
 import random
 import argparse
 
@@ -58,3 +57,4 @@ if __name__ == "__main__":
     parser.add_argument('test', type=str, help='Path for writing test set')
 
     main(parser.parse_args())
+
